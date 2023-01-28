@@ -28,21 +28,6 @@ public class UserDaoJDBCImpl implements UserDao {
                     ") ;");
 
             connection.commit();
-            //******** mysql *************
-            //  CREATE TABLE `test-first`.`new_table` (
-            //  `id` INT NOT NULL AUTO_INCREMENT,
-            //  `name` VARCHAR(45) NULL,
-            //  `lastname` VARCHAR(45) NULL,
-            //  PRIMARY KEY (`id`))
-            //  ENGINE = InnoDB
-            //  DEFAULT CHARACTER SET = utf16;
-
-            //******* idea generation code  *******
-            //    create table if not exists db_name (
-            //    id   bigint auto_increment,
-            //    name varchar(45) null,
-            //    constraint id,
-            //    primary key (id)  );
             connection1 = connection;
         } catch (SQLException e) {
             e.printStackTrace();
