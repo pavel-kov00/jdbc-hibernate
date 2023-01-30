@@ -5,10 +5,12 @@ import jm.task.core.jdbc.util.Util;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoHibernateImpl implements UserDao {
+    Session session = null;
     public UserDaoHibernateImpl() {
 
     }
@@ -16,7 +18,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
-        Session session = null;
+
         try {
             session = Util.getSessionFactory().getCurrentSession();
             session.beginTransaction();
@@ -38,7 +40,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void dropUsersTable() {
-        Session session = null;
+
         try {
             session = Util.getSessionFactory().getCurrentSession();
             session.beginTransaction();
@@ -55,12 +57,11 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-        Session session = null;
+
         try {
             session = Util.getSessionFactory().getCurrentSession();
             session.beginTransaction();
-            User user = new User(name,lastName, age);
-            session.save(user);
+            session.save(new User(name,lastName, age));
             session.getTransaction().commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -72,12 +73,11 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void removeUserById(long id) {
-        Session session = null;
+
         try {
             session = Util.getSessionFactory().getCurrentSession();
             session.beginTransaction();
-            User user = session.get(User.class,id);
-            session.delete(user);
+            session.delete(session.get(User.class,id));
             session.getTransaction().commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,11 +90,13 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public List<User> getAllUsers() {
         List<User> list = new ArrayList<>();
-        Session session = null;
+
         try {
             session = Util.getSessionFactory().getCurrentSession();
             session.beginTransaction();
-            list = session.createQuery("from User").getResultList();
+            TypedQuery<User> query = session.createQuery("from User",
+                    User.class);
+            list = query.getResultList();
             session.getTransaction().commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -107,7 +109,6 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void cleanUsersTable() {
-        Session session = null;
         try {
             session = Util.getSessionFactory().getCurrentSession();
             session.beginTransaction();
